@@ -6,13 +6,21 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 
+
+const corsOptions = {
+  origin: 'https://quiz-fullstack.vercel.app', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 const app = express();
-app.use(cors());
-const allowedOrigins = ['https://your-frontend-domain.com', frontendBaseUrl]; 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,  
-}));
+// app.use(cors());
+// const allowedOrigins = ['https://your-frontend-domain.com', frontendBaseUrl]; 
+// app.use(cors({
+//   origin: allowedOrigins,
+//   credentials: true,  
+// }));
 connectDB();
 
 // Middleware
