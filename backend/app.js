@@ -1,4 +1,5 @@
 require('dotenv').config();
+const frontendBaseUrl = process.env.REACT_APP_FRONTEND_BASE_URL;
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -7,6 +8,11 @@ const quizRoutes = require('./routes/quizRoutes');
 
 const app = express();
 app.use(cors());
+const allowedOrigins = ['https://your-frontend-domain.com', frontendBaseUrl]; 
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,  
+}));
 connectDB();
 
 // Middleware
