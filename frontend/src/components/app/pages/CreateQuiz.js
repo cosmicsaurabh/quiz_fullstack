@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import useAxiosWithAuth from '../../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
+
 const CreateQuiz = () => {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState([{ question: '', options: ['', '', '', ''], correctAnswer: 0 }]);
@@ -35,7 +37,7 @@ const CreateQuiz = () => {
 
     try {
       const token = localStorage.getItem('token'); 
-      await axios.post('http://localhost:5000/api/app/create', { title, questions }, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${BACKEND_BASE_URL}app/create`, { title, questions }, { headers: { Authorization: `Bearer ${token}` } });
       setError('');
       alert('Quiz created!');
       setTitle('');

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import useAxiosWithAuth from '../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
+
 
 const Login = () => {
   const axios = useAxiosWithAuth();
@@ -10,7 +12,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -18,9 +20,9 @@ const Login = () => {
       setErrorMessage('Please fill in all fields.');
       return;
     }
-
+    
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const response = await axios.post(`${BACKEND_BASE_URL}auth/login`, { email, password });
       login(response.data.token);
       alert('Login successful!');
       navigate('/');

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxiosWithAuth from '../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -39,7 +40,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      const response = await axios.post(`${BACKEND_BASE_URL}auth/register`, { name, email, password });
       alert('Registration successful!');
       navigate('/login');
     } catch (error) {

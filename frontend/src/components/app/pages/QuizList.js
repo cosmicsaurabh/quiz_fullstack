@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxiosWithAuth from '../../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -11,7 +12,7 @@ const QuizList = () => {
     const fetchQuizzes = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/app/quizzes', {
+        const response = await axios.get(`${BACKEND_BASE_URL}app/quizzes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setQuizzes(response.data.quizzes);

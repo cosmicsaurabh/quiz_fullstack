@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useAxiosWithAuth from '../../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const styles = {
   container: {
@@ -70,7 +71,7 @@ const UserResults = () => {
     const fetchResults = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/app/results', {
+        const response = await axios.get(`${BACKEND_BASE_URL}app/results`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setResults(response.data.results);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAxiosWithAuth from '../../axiosInstance';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
+
 const TakeQuiz = () => {
   const location = useLocation();
   const axios = useAxiosWithAuth();
@@ -10,74 +12,12 @@ const TakeQuiz = () => {
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(true); 
   const navigate = useNavigate();
-  const styles = {
-    container: {
-      backgroundColor: '#ffffff',
-      padding: '40px',
-      borderRadius: '12px',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-      width: '100%',
-      maxWidth: '700px',
-      margin: '50px auto',
-      fontFamily: 'Arial, sans-serif',
-      fontSize: '16px',
-      lineHeight: '1.6',
-      color: '#333',
-    },
-    title: {
-      textAlign: 'center',
-      color: '#007BFF',
-      fontSize: '28px',
-      marginBottom: '20px',
-      fontWeight: 'bold',
-    },
-    question: {
-      marginBottom: '15px',
-      fontSize: '20px',
-      fontWeight: '500',
-      color: '#444',
-    },
-    label: {
-      display: 'block',
-      marginBottom: '10px',
-      padding: '10px',
-      backgroundColor: '#f2f2f2',
-      borderRadius: '8px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s',
-    },
-    input: {
-      marginRight: '10px',
-    },
-    button: {
-      backgroundColor: '#007BFF',
-      color: '#fff',
-      border: 'none',
-      padding: '12px 25px',
-      borderRadius: '6px',
-      cursor: 'pointer',
-      fontSize: '18px',
-      transition: 'background-color 0.3s, transform 0.3s',
-      marginTop: '20px',
-      width: '100%',
-    },
-    buttonHover: {
-      backgroundColor: '#0056b3',
-      transform: 'scale(1.05)',
-    },
-    errorMessage: {
-      color: '#D9534F',
-      fontSize: '14px',
-      marginTop: '10px',
-      textAlign: 'center',
-    },
-  };
-
+  
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         const token = localStorage.getItem('token'); 
-        const response = await axios.get(`http://localhost:5000/api/app/${quizId}`,{headers: { Authorization: `Bearer ${token}` } });
+        const response = await axios.get(`${BACKEND_BASE_URL}app/${quizId}`,{headers: { Authorization: `Bearer ${token}` } });
         setQuiz(response.data.quiz);
         setAnswers(new Array(response.data.quiz.questions.length).fill(null)); 
         setLoading(false);
@@ -87,18 +27,18 @@ const TakeQuiz = () => {
         setLoading(false);
       }
     };
-
+    
     if (quizId) {
       fetchQuiz();
     }
   }, [quizId]);
-
+  
   const submitAnswers = async () => {
     if (answers.includes(null)) {
       alert('Please answer all questions before submitting.');
       return;
     }
-
+    
     try {
       const token = localStorage.getItem('token');
       await axios.post(
@@ -113,7 +53,7 @@ const TakeQuiz = () => {
       alert('Failed to submit quiz, please try again.');
     }
   };
-
+  
   if (loading) {
     return <p style={{ textAlign: 'center', fontSize: '18px', color: '#333' }}>Loading quiz...</p>;
   }
@@ -160,3 +100,65 @@ const TakeQuiz = () => {
 };
 
 export default TakeQuiz;
+const styles = {
+  container: {
+    backgroundColor: '#ffffff',
+    padding: '40px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    maxWidth: '700px',
+    margin: '50px auto',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '16px',
+    lineHeight: '1.6',
+    color: '#333',
+  },
+  title: {
+    textAlign: 'center',
+    color: '#007BFF',
+    fontSize: '28px',
+    marginBottom: '20px',
+    fontWeight: 'bold',
+  },
+  question: {
+    marginBottom: '15px',
+    fontSize: '20px',
+    fontWeight: '500',
+    color: '#444',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: '#f2f2f2',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+  },
+  input: {
+    marginRight: '10px',
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    color: '#fff',
+    border: 'none',
+    padding: '12px 25px',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '18px',
+    transition: 'background-color 0.3s, transform 0.3s',
+    marginTop: '20px',
+    width: '100%',
+  },
+  buttonHover: {
+    backgroundColor: '#0056b3',
+    transform: 'scale(1.05)',
+  },
+  errorMessage: {
+    color: '#D9534F',
+    fontSize: '14px',
+    marginTop: '10px',
+    textAlign: 'center',
+  },
+};
