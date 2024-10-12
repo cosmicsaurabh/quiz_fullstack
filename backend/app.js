@@ -13,8 +13,8 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions));
 const app = express();
+app.use(cors(corsOptions));
 // app.use(cors());
 // const allowedOrigins = ['https://your-frontend-domain.com', frontendBaseUrl]; 
 // app.use(cors({
