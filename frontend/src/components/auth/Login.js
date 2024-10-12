@@ -13,11 +13,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Reset error message
     setErrorMessage('');
-
-    // Basic validation
     if (!email || !password) {
       setErrorMessage('Please fill in all fields.');
       return;
@@ -30,7 +26,6 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      // Handle specific error messages from the server
       const message = error.response && error.response.data && error.response.data.message
         ? error.response.data.message
         : 'Login failed. Please check your credentials.';
@@ -41,7 +36,7 @@ const Login = () => {
   return (
     <form style={styles.formContainer} onSubmit={handleSubmit}>
       <h2>Login</h2>
-      {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
+      
       <label style={styles.label}>Email:</label>
       <input
         style={styles.input}
@@ -56,6 +51,7 @@ const Login = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
       <button style={styles.button} type="submit">
         Login
       </button>
@@ -107,5 +103,9 @@ const styles = {
   inputFocus: {
     borderColor: '#28a745',
     outline: 'none',
+  },
+  errorMessage: {
+    color: 'red',
+    marginBottom: '10px',
   },
 };

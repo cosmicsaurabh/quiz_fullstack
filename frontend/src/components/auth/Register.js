@@ -1,6 +1,83 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxiosWithAuth from '../axiosInstance';
+
+const Register = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+  const axios = useAxiosWithAuth();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    if (!name || !email || !password) {
+      setErrorMessage('All fields are required.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      alert('Registration successful!');
+      navigate('/login');
+    } catch (error) {
+      console.error(error.response ? error.response.data : error.message);
+      setErrorMessage(error.response?.data?.error || 'Registration failed. Please try again.');
+    }
+  };
+
+  return (
+    <form style={styles.formContainer} onSubmit={handleSubmit}>
+      <h2>Register</h2>
+      {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
+      <label style={styles.label}>Name:</label>
+      <input
+        style={styles.input}
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <label style={styles.label}>Email:</label>
+      <input
+        style={styles.input}
+        type="text"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <label style={styles.label}>Password:</label>
+      <input
+        style={styles.input}
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button style={styles.button} type="submit">Register</button>
+    </form>
+  );
+};
+export default Register;
 const styles = {
   formContainer: {
     backgroundColor: '#ffffff',
@@ -44,54 +121,8 @@ const styles = {
     borderColor: '#007bff',
     outline: 'none',
   },
+  errorMessage: {
+    color: 'red',
+    marginBottom: '10px',
+  },
 };
-
-const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const axios = useAxiosWithAuth();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
-      alert('Registration successful!');
-      navigate('/login')
-
-    } catch (error) {
-      alert('Registration failed: ' + error.message);
-    }
-  };
-
-  return (
-    <form style={styles.formContainer} onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      <label style={styles.label}>Name:</label>
-      <input
-        style={styles.input}
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <label style={styles.label}>Email:</label>
-      <input
-        style={styles.input}
-        type="text"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <label style={styles.label}>Password:</label>
-      <input
-        style={styles.input}
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button style={styles.button} type="submit">Register</button>
-    </form>
-  );
-};
-
-export default Register;
